@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\yeyo.GridManangement.Domain\yeyo.GridManangement.Domain.csproj" />
+    <ProjectReference Include="..\yeyo.Infrastructure\yeyo.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>
