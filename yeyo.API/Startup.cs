@@ -10,6 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Autofac;
+using yeyo.API.Extensions;
 using yeyo.Infrastructure.DI;
 
 namespace yeyo.API
@@ -25,20 +27,21 @@ namespace yeyo.API
         private IConfiguration Configuration { get; }
         private IWebHostEnvironment Env { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
 
             services.AddControllers();
             services.AddInfrastructureService(Env, Configuration);
         }
+        public static void ConfigureContainer(ContainerBuilder builder) => builder.ConfigureAutofac();
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
+                app.UseInfrastructureService(Configuration);
 
                 //app.UseSwagger();
                 //app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "yeyo.API v1"));

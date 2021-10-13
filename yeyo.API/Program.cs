@@ -6,10 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using yeyo.API.Extensions;
 
 namespace yeyo.API
 {
-    public class Program
+    public static class Program
     {
         public static void Main(string[] args)
         {
@@ -18,6 +19,7 @@ namespace yeyo.API
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .UseAutofacServiceProviderFactory()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();

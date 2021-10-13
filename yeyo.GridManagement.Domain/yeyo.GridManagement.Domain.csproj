@@ -5,7 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\yeyo.GridManangement.Domain\yeyo.GridManangement.Domain.csproj" />
+    <PackageReference Include="SqlSugarCore" Version="5.0.4.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\yeyo.Infrastructure\yeyo.Infrastructure.csproj" />
   </ItemGroup>
 

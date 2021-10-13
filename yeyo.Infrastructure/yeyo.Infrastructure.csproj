@@ -6,7 +6,10 @@
 
   <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.2" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.13.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\yeyo.Infrastructure.Treasury\yeyo.Infrastructure.Treasury.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,16 +6,16 @@ using Microsoft.OpenApi.Models;
 
 namespace yeyo.Infrastructure.Swagger
 {
-    static class SwaggerDiExtension
+    internal static class SwaggerDiExtension
     {
         internal static IServiceCollection AddSwaggerService(this IServiceCollection services, IConfiguration configuration)
         {
             #region Swagger
             services.AddSwaggerGen(opt =>
             {
-                string contactName = configuration.GetSection("SwaggerDoc:contactName").Value;
-                string contactEmail = configuration.GetSection("SwaggerDoc:contactEmail").Value;
-                string contactUrl = configuration.GetSection("SwaggerDoc:contactUrl").Value;
+                var contactName = configuration.GetSection("SwaggerDoc:contactName").Value;
+                var contactEmail = configuration.GetSection("SwaggerDoc:contactEmail").Value;
+                var contactUrl = configuration.GetSection("SwaggerDoc:contactUrl").Value;
                 opt.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = configuration.GetSection("SwaggerDoc:Version").Value,
