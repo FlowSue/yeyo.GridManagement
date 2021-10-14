@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using yeyo.API.Extensions;
+using yeyo.Infrastructure.Auth.DI;
 using yeyo.Infrastructure.DI;
 
 namespace yeyo.API
@@ -29,9 +30,8 @@ namespace yeyo.API
 
         public void ConfigureServices(IServiceCollection services)
         {
-
-            services.AddControllers();
             services.AddInfrastructureService(Env, Configuration);
+            services.AddControllers();
         }
         public static void ConfigureContainer(ContainerBuilder builder) => builder.ConfigureAutofac();
 
@@ -41,7 +41,7 @@ namespace yeyo.API
             {
                 app.UseDeveloperExceptionPage();
 
-                app.UseInfrastructureService(Configuration);
+                app.UseInfrastructureService();
 
                 //app.UseSwagger();
                 //app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "yeyo.API v1"));
@@ -51,7 +51,7 @@ namespace yeyo.API
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseInfrastructureAuthService();
 
             app.UseEndpoints(endpoints =>
             {

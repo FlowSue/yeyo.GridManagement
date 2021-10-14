@@ -6,7 +6,7 @@ namespace yeyo.Infrastructure.Auth.Attribute
 {
     internal class AuthorizeAttribute : Microsoft.AspNetCore.Authorization.AuthorizeAttribute
     {
-        public AuthorizeAttribute(AuthPolicyEnum authPolicyEnum, string schemes = JwtBearerDefaults.AuthenticationScheme)
+        public AuthorizeAttribute(AuthPolicyEnum authPolicyEnum = AuthPolicyEnum.RequireRoleOfSystemAdmin, string schemes = JwtBearerDefaults.AuthenticationScheme)
         {
             this.Policy = authPolicyEnum.ToString();
             this.AuthenticationSchemes = schemes;

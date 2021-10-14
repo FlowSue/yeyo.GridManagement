@@ -9,7 +9,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\yeyo.Infrastructure.Auth\yeyo.Infrastructure.Auth.csproj" />
     <ProjectReference Include="..\yeyo.Infrastructure.Treasury\yeyo.Infrastructure.Treasury.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Cors\" />
   </ItemGroup>
 
 </Project>

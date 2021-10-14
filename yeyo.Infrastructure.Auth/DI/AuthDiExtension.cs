@@ -1,39 +1,29 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
 using yeyo.Infrastructure.Auth.Authorize;
 using yeyo.Infrastructure.Auth.JWT;
 using yeyo.Infrastructure.Auth.Models;
+using yeyo.Infrastructure.Auth.Operate;
+using yeyo.Infrastructure.Treasury.AutoConfigModel;
 
 namespace yeyo.Infrastructure.Auth.DI
 {
-    public static class AuthDiExtension
+    public static class DiExtension
     {
-        static IServiceCollection AddAuthService(this IServiceCollection services, JwtOption jwtOption)
+        public static void AddAuthService(this IServiceCollection services, IJwtOptionConfig jwtOption)
         {
             services.AddSingleton<JwtSecurityTokenHandler>();
-            services.AddSingleton(jwtOption);
             services.AddSingleton<IJwtService, JwtService>();
-            //services.AddAuthentication()
-            //    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, o =>
-            //    {
-            //        o.LoginPath = new PathString("/Login/Index");
-            //        o.AccessDeniedPath = new PathString("/Error/Forbidden");
-            //    });
             #region 注册【认证】服务
             services.AddAuthentication(x =>
             {
-                //x.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                //x.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                //x.DefaultChallengeScheme = OAuthDefaults.DisplayName;
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(o =>
@@ -46,10 +36,6 @@ namespace yeyo.Infrastructure.Auth.DI
                     RoleClaimType = ClaimTypes.Role,
                     ValidIssuer = "C.O.S.E.C",
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtOption.SecurityKey)),
-                    //AudienceValidator = (m, n, z) =>
-                    //{
-                    //    return m != null && m.FirstOrDefault().Equals(Helper.CacheHelper.GetCacheValue($"Audience{m.LastOrDefault()}-{n.Id}")?.ToString());
-                    //},
                     /***********************************TokenValidationParameters的参数默认值***********************************/
                     //RequireSignedTokens = true,
                     //RequireExpirationTime = true,
@@ -59,7 +45,6 @@ namespace yeyo.Infrastructure.Auth.DI
                     //ValidateIssuer = true,
                     //ValidateIssuerSigningKey = true,
                     //ClockSkew = TimeSpan.FromSeconds(5),// 允许的服务器时间偏移量
-                    //ValidateLifetime = true// 是否验证Token有效期，使用当前时间与Token的Claims中的NotBefore和Expires对比
                 };
                 o.Events = new JwtBearerEvents
                 {
@@ -73,29 +58,7 @@ namespace yeyo.Infrastructure.Auth.DI
                         return Task.CompletedTask;
                     }
                 };
-            })
-            //.AddOAuth(OAuthDefaults.DisplayName, options =>
-            //{
-            //    options.ClientId = "oauth.code";
-            //    options.ClientSecret = "secret";
-            //    options.AuthorizationEndpoint = "https://oidc.faasx.com/connect/authorize";
-            //    options.TokenEndpoint = "https://oidc.faasx.com/connect/token";
-            //    options.CallbackPath = "/signin-oauth";
-            //    options.Scope.Add("openid");
-            //    options.Scope.Add("profile");
-            //    options.Scope.Add("email");
-            //    options.SaveTokens = true;
-            //    // 事件执行顺序 ：
-            //    // 1.创建Ticket之前触发
-            //    options.Events.OnCreatingTicket = context => Task.CompletedTask;
-            //    // 2.创建Ticket失败时触发
-            //    options.Events.OnRemoteFailure = context => Task.CompletedTask;
-            //    // 3.Ticket接收完成之后触发
-            //    options.Events.OnTicketReceived = context => Task.CompletedTask;
-            //    // 4.Challenge时触发，默认跳转到OAuth服务器
-            //    // options.Events.OnRedirectToAuthorizationEndpoint = context => context.Response.Redirect(context.RedirectUri);
-            //})
-            ;
+            });
             #endregion
 
             #region 注册【授权】服务
@@ -112,10 +75,8 @@ namespace yeyo.Infrastructure.Auth.DI
             services.AddSingleton<IAuthorizationHandler, PolicyHandler>();
 
             //注册IOperateInfo
-            services.AddScoped<IOperateInfo, OperateInfo>();
-            services.AddScoped<IEntityBaseAutoSetter, OperateSetter>();
-
-            return services;
+            services.AddScoped<IOperatorInfo, OperatorInfo>();
+            services.AddScoped<IEntityBaseAutoSetter, OperatorSetter>();
         }
 
         public static void UseAuthService(this IApplicationBuilder app)
@@ -124,7 +85,8 @@ namespace yeyo.Infrastructure.Auth.DI
             app.UseAuthentication();
 
             //授权
-            //app.UseMiddleware<JwtAuthorizationMiddleware>();
+            app.UseAuthorization();
+
         }
     }
 }

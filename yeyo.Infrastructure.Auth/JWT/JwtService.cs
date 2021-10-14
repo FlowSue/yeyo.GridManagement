@@ -9,15 +9,16 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using yeyo.Infrastructure.Auth.Models;
+using yeyo.Infrastructure.Treasury.AutoConfigModel;
 
 namespace yeyo.Infrastructure.Auth.JWT
 {
     internal class JwtService : IJwtService
     {
         private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler;
-        private readonly JwtOption _jwtConfig;
+        private readonly JwtOptionConfig _jwtConfig;
 
-        public JwtService(JwtSecurityTokenHandler jwtSecurityTokenHandler, JwtOption jwtConfig)
+        public JwtService(JwtSecurityTokenHandler jwtSecurityTokenHandler, JwtOptionConfig jwtConfig)
         {
             _jwtSecurityTokenHandler = jwtSecurityTokenHandler;
             _jwtConfig = jwtConfig;

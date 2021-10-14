@@ -14,4 +14,8 @@
 
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\yeyo.Infrastructure.Treasury\yeyo.Infrastructure.Treasury.csproj" />
+  </ItemGroup>
+
 </Project>

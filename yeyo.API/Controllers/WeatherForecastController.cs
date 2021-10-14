@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using yeyo.GridManagement.Domain.Entities;
+using yeyo.Infrastructure.Treasury.AutoConfigModel;
 
 namespace yeyo.API.Controllers
 {
@@ -18,10 +19,12 @@ namespace yeyo.API.Controllers
         };
 
         private readonly ILogger<WeatherForecastController> _logger;
+        private readonly IAllConfigModel _config;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, IAllConfigModel config)
         {
             _logger = logger;
+            _config = config;
         }
 
         [HttpGet]

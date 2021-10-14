@@ -1,28 +1,24 @@
-﻿using System;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using yeyo.Infrastructure.Treasury.AutoConfigModel;
 
 namespace yeyo.Infrastructure.Swagger
 {
-    internal static class SwaggerDiExtension
+    internal static class DiExtension
     {
-        internal static IServiceCollection AddSwaggerService(this IServiceCollection services, IConfiguration configuration)
+        internal static void AddSwaggerService(this IServiceCollection services, SwaggerDoc config)
         {
             #region Swagger
             services.AddSwaggerGen(opt =>
             {
-                var contactName = configuration.GetSection("SwaggerDoc:contactName").Value;
-                var contactEmail = configuration.GetSection("SwaggerDoc:contactEmail").Value;
-                var contactUrl = configuration.GetSection("SwaggerDoc:contactUrl").Value;
                 opt.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Version = configuration.GetSection("SwaggerDoc:Version").Value,
-                    Title = configuration.GetSection("SwaggerDoc:Title").Value,
-                    Description = configuration.GetSection("SwaggerDoc:Description").Value,
+                    Version = config.Version,
+                    Title = config.Title,
+                    Description = config.Description,
                     //TermsOfService = new Uri(contactUrl),
-                    Contact = new OpenApiContact { Name = contactName, Email = contactEmail, Url = new Uri(contactUrl) },
+                    Contact = new OpenApiContact { Name = config.ContactName, Email = config.ContactEmail, Url = config.ContactUrl },
                     //License = new OpenApiLicense { Name = contactName, Url = new Uri(contactUrl) }
                 });
                 // 添加读取注释服务
@@ -71,16 +67,15 @@ namespace yeyo.Infrastructure.Swagger
                 #endregion
             });
             #endregion
-            return services;
         }
 
-        internal static void UseSwaggerService(this IApplicationBuilder app, IConfiguration configuration)
+        internal static void UseSwaggerService(this IApplicationBuilder app, SwaggerDoc configuration)
         {
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint($"/swagger/v1/swagger.json", "ApiHelp V1");
-                c.RoutePrefix = configuration.GetSection("SwaggerDoc:Route").Value;
+                c.SwaggerEndpoint($"/swagger/v{configuration.Version}/swagger.json", configuration.ApiName);
+                c.RoutePrefix = configuration.Route;
                 c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None);
             });
         }
